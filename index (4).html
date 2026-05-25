@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Which Anime Villain Are You? | Ultimate Villain Quiz</title>
+  <meta name="description" content="Discover which legendary anime villain matches your soul. 10 psychological questions. 100 possible results. Fan-made personality quiz.">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- PARTICLES BACKGROUND -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- MUSIC PLAYER -->
+  <div id="music-player">
+    <button id="music-toggle" title="Toggle Music">♪</button>
+    <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.4" title="Volume">
+    <audio id="bg-music" loop>
+      <source src="assets/music/background.mp3" type="audio/mpeg">
+      <source src="assets/music/background.ogg" type="audio/ogg">
+    </audio>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div id="disclaimer">
+    ⚠️ Fan-made entertainment site. All anime characters, names, and references belong to their respective creators and studios.
+  </div>
+
+  <!-- ====== LANDING PAGE ====== -->
+  <section id="landing-page" class="page active">
+    <div class="landing-bg-glow"></div>
+    <div class="landing-content">
+      <div class="eye-symbol">👁</div>
+      <div class="title-wrapper">
+        <h1 class="main-title">
+          <span class="title-line-1">WHICH ANIME</span>
+          <span class="title-line-2">VILLAIN</span>
+          <span class="title-line-3">ARE YOU?</span>
+        </h1>
+      </div>
+      <p class="subtitle">100 Legendary Villains · 10 Questions · Your Darkness Revealed</p>
+      <div class="aura-text">⟨ YOUR SOUL ALIGNMENT IS BEING SCANNED ⟩</div>
+      <button id="start-btn" class="btn-primary" onclick="startQuiz()">
+        <span class="btn-inner">ENTER THE DARKNESS</span>
+        <span class="btn-glow"></span>
+      </button>
+      <p class="warning-text">⚠ Warning: The truth may be darker than you expect</p>
+    </div>
+    <div class="scroll-hint">↓ scroll ↓</div>
+  </section>
+
+  <!-- ====== QUIZ PAGE ====== -->
+  <section id="quiz-page" class="page">
+    <div class="quiz-header">
+      <div class="darkness-meter">
+        <span class="darkness-label">YOUR DARKNESS LEVEL</span>
+        <div class="darkness-bar-wrap">
+          <div id="darkness-bar" class="darkness-bar"></div>
+        </div>
+        <span id="darkness-percent" class="darkness-pct">0%</span>
+      </div>
+      <div class="question-counter">
+        <span id="q-current">1</span><span class="q-sep">/</span><span id="q-total">10</span>
+      </div>
+    </div>
+
+    <div id="quiz-container">
+      <div id="suspense-overlay" class="suspense-overlay hidden">
+        <div class="suspense-text" id="suspense-text">Analyzing your soul...</div>
+      </div>
+      <div id="question-card" class="question-card">
+        <div class="q-number-badge" id="q-badge">Q1</div>
+        <h2 id="question-text" class="question-text"></h2>
+        <div id="options-container" class="options-container"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== RESULT PAGE ====== -->
+  <section id="result-page" class="page">
+    <div class="result-bg-aura" id="result-aura"></div>
+    <div class="result-content">
+      <div class="result-reveal-text">YOUR DARKNESS HAS BEEN REVEALED</div>
+
+      <div id="villain-card" class="villain-card">
+        <div class="villain-image-wrap">
+          <div id="villain-img-container" class="villain-img-container">
+            <div class="villain-placeholder" id="villain-placeholder">
+              <div class="placeholder-symbol" id="placeholder-symbol">?</div>
+              <div class="placeholder-ring"></div>
+            </div>
+            <img id="villain-img" class="villain-img hidden" alt="Villain" onerror="handleImgError()">
+          </div>
+          <div class="villain-aura-ring"></div>
+        </div>
+
+        <div class="villain-info">
+          <div class="villain-name-label">YOU ARE</div>
+          <h2 id="villain-name" class="villain-name"></h2>
+          <div id="villain-series" class="villain-series"></div>
+          <div class="villain-quote-wrap">
+            <span class="quote-mark">"</span>
+            <p id="villain-quote" class="villain-quote"></p>
+            <span class="quote-mark">"</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCORES -->
+      <div class="scores-grid">
+        <div class="score-item">
+          <div class="score-label">MORALITY</div>
+          <div class="score-bar-wrap"><div class="score-bar morality-bar" id="morality-bar"></div></div>
+          <div class="score-val" id="morality-val"></div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">DARKNESS</div>
+          <div class="score-bar-wrap"><div class="score-bar darkness-s-bar" id="darkness-s-bar"></div></div>
+          <div class="score-val" id="darkness-s-val"></div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">INTELLIGENCE</div>
+          <div class="score-bar-wrap"><div class="score-bar intel-bar" id="intel-bar"></div></div>
+          <div class="score-val" id="intel-val"></div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">CHAOS</div>
+          <div class="score-bar-wrap"><div class="score-bar chaos-bar" id="chaos-bar"></div></div>
+          <div class="score-val" id="chaos-val"></div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">EMOTIONAL DMG</div>
+          <div class="score-bar-wrap"><div class="score-bar emo-bar" id="emo-bar"></div></div>
+          <div class="score-val" id="emo-val"></div>
+        </div>
+        <div class="score-item">
+          <div class="score-label">VILLAINY SCORE</div>
+          <div class="score-bar-wrap"><div class="score-bar villain-score-bar" id="villain-score-bar"></div></div>
+          <div class="score-val" id="villain-score-val"></div>
+        </div>
+      </div>
+
+      <!-- ANALYSIS -->
+      <div class="analysis-block">
+        <h3 class="analysis-title">⚔ PERSONALITY ANALYSIS</h3>
+        <p id="villain-analysis" class="analysis-text"></p>
+
+        <div class="traits-grid">
+          <div class="trait-block">
+            <div class="trait-label">⚡ STRENGTHS</div>
+            <ul id="villain-strengths" class="trait-list"></ul>
+          </div>
+          <div class="trait-block">
+            <div class="trait-label">💔 WEAKNESSES</div>
+            <ul id="villain-weaknesses" class="trait-list"></ul>
+          </div>
+        </div>
+
+        <div class="soundtrack-box">
+          <span class="soundtrack-icon">🎵</span>
+          <span class="soundtrack-label">SOUNDTRACK SUGGESTION:</span>
+          <span id="villain-soundtrack" class="soundtrack-text"></span>
+        </div>
+
+        <div class="forms-section">
+          <h4 class="forms-title">VILLAIN FORMS</h4>
+          <div id="villain-forms" class="forms-grid"></div>
+        </div>
+      </div>
+
+      <!-- SHARE -->
+      <div class="share-section">
+        <button class="btn-share" onclick="copyResult()">📋 COPY RESULT</button>
+        <button class="btn-share" onclick="shareScore()">🔗 SHARE SCORE</button>
+        <button class="btn-share" onclick="downloadCard()">⬇ DOWNLOAD CARD</button>
+        <button class="btn-retry" onclick="restartQuiz()">🔄 RETAKE QUIZ</button>
+      </div>
+
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
